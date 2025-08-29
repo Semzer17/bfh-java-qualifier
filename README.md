@@ -44,3 +44,11 @@ Replace the placeholder `SELECT ...` with your final query.
 - Public JAR link
 
 Good luck!
+
+
+## CI: Build JAR on GitHub
+A GitHub Actions workflow (`.github/workflows/build-and-commit-jar.yml`) is included.
+- Trigger it from the **Actions** tab (Run workflow).
+- It builds with Java 17 + Maven and commits the JAR to `release/bfh-java-qualifier-1.0.0.jar`.
+- Raw link format (after it runs):
+  `https://github.com/Semzer17/bfh-java-qualifier/raw/main/release/bfh-java-qualifier-1.0.0.jar`
