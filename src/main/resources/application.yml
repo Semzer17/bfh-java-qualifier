@@ -1,0 +1,10 @@
+app:
+  name: "Aayush Singh"
+  regNo: "22BCE0769"
+  email: "atollsemzer@gmail.com"
+  baseUrl: "https://bfhldevapigw.healthrx.co.in/hiring"
+
+logging:
+  level:
+    root: INFO
+    com.example.bfhqualifier: DEBUG
