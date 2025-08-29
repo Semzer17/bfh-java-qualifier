@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: write   # <-- allow push from workflow
+  contents: write
 
 jobs:
   build:
@@ -15,12 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0     # full history to avoid push issues
-
-      - name: Show runner info
-        run: |
-          uname -a
-          ls -la
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -29,27 +24,40 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
-      - name: Ensure Maven present (just in case)
+      - name: Verify Java & Maven
         run: |
-          mvn -v || (sudo apt-get update && sudo apt-get install -y maven)
-          mvn -v
           java -version
+          mvn -v || (sudo apt-get update && sudo apt-get install -y maven && mvn -v)
 
-      - name: Build with Maven (verbose)
-        run: mvn -B -DskipTests package
+      - name: Build (verbose)
+        run: |
+          mvn -B -DskipTests package
+          echo "---- TARGET CONTENTS ----"
+          ls -la target || true
+
+      # compute jar name dynamically
+      - name: Detect final JAR
+        id: detect
+        run: |
+          JAR="$(ls target/*.jar | head -n1 || true)"
+          echo "JAR=$JAR" >> $GITHUB_OUTPUT
+          if [ -z "$JAR" ]; then
+            echo "No JAR found in target/."
+            exit 1
+          fi
+          echo "Detected JAR: $JAR"
 
       - name: Copy JAR to release/
         run: |
           mkdir -p release
-          cp target/*-1.0.0.jar release/bfh-java-qualifier-1.0.0.jar
+          cp "${{ steps.detect.outputs.JAR }}" release/
           ls -la release
 
-      - name: Commit JAR back to repo
+      - name: Commit JAR to repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin "$GITHUB_REF_NAME" || true
-          git add release/bfh-java-qualifier-1.0.0.jar
+          git add release/*.jar
           git commit -m "CI: add compiled JAR [skip ci]" || echo "No changes to commit"
           git push origin "$GITHUB_REF_NAME"
 
@@ -58,4 +66,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bfh-jar
-          path: release/bfh-java-qualifier-1.0.0.jar
+          path: release/*.jar
