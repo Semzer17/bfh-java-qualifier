@@ -41,23 +41,25 @@ jobs:
           fi
           echo "Detected JAR: $JAR"
 
-      - name: Copy JAR to release/
+      - name: Prepare release files (both names)
         run: |
           mkdir -p release
-          cp "${{ steps.detect.outputs.JAR }}" "release/bfh-java-qualifier-1.0.0.jar"
+          cp "${{ steps.detect.outputs.JAR }}" release/bfh-java-qualifier.jar
+          cp "${{ steps.detect.outputs.JAR }}" release/bfh-java-qualifier-1.0.0.jar
           ls -la release
 
-      - name: Commit JAR to repo
+      - name: Commit JAR(s) to repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add release/bfh-java-qualifier.jar
-          git commit -m "CI: add compiled JAR [skip ci]" || echo "No changes to commit"
+          git pull --rebase origin "$GITHUB_REF_NAME" || true
+          git add release/bfh-java-qualifier.jar release/bfh-java-qualifier-1.0.0.jar
+          git commit -m "CI: add compiled JAR(s) [skip ci]" || echo "No changes to commit"
           git push origin "$GITHUB_REF_NAME"
 
-      - name: Upload JAR as artifact (fallback)
+      - name: Upload JARs as artifact (fallback)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: bfh-jar
-          path: release/bfh-java-qualifier.jar
+          name: bfh-jars
+          path: release/*.jar
