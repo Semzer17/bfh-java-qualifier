@@ -1,0 +1,14 @@
+# Maven / Java
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.log
+*.iml
+.idea/
+.project
+.classpath
+.settings/
+*.DS_Store
+
+# Keep release (contains compiled jar committed by CI)
+!release/

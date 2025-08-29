@@ -16,10 +16,4 @@ public class GenerateWebhookResponse {
 
     public String getAccessToken() { return accessToken; }
     public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
-
-    @Override
-    public String toString() {
-        return "GenerateWebhookResponse{webhook='%s', accessToken(len)=%d}"
-                .formatted(webhook, accessToken != null ? accessToken.length() : 0);
-    }
 }

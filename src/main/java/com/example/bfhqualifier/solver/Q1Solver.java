@@ -1,13 +1,13 @@
 package com.example.bfhqualifier.solver;
 
 /**
- * Odd last-two digits → Question 1
- * Final SQL is MySQL-compatible.
+ * Q1 (odd last-two digits) — MySQL final SQL
  */
 public class Q1Solver implements SqlSolver {
     @Override
     public String buildFinalQuery() {
-        return """SELECT
+        return """
+SELECT
     mp.amount AS SALARY,
     CONCAT(e.first_name, ' ', e.last_name) AS NAME,
     TIMESTAMPDIFF(YEAR, e.dob, CURDATE()) AS AGE,
@@ -20,6 +20,7 @@ FROM (
     LIMIT 1
 ) AS mp
 JOIN employee e ON e.emp_id = mp.emp_id
-JOIN department d ON d.department_id = e.department;""";
+JOIN department d ON d.department_id = e.department;
+        """;
     }
 }

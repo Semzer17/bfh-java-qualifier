@@ -1,54 +1,32 @@
-# Bajaj Finserv Health | Qualifier 1 | JAVA — Auto Runner
+# BFH Java Qualifier — Auto Runner (Final)
 
-This Spring Boot app performs the entire flow **on startup** (no controllers):
-1. Calls `POST /generateWebhook/JAVA` with your `name`, `regNo`, and `email`.
-2. Receives `{ webhook, accessToken }`.
-3. Decides which SQL question you got based on the last two digits of your `regNo` (odd → Q1, even → Q2).
-4. Generates a **final SQL query** via a pluggable solver.
-5. Persists it to `target/finalQuery.sql`.
-6. Submits the JSON `{"finalQuery": "..."}` to the **returned `webhook` URL** with `Authorization: <accessToken>`.
-   - If `webhook` is missing for any reason, it falls back to `POST /testWebhook/JAVA` as per the PDF.
+This repo is ready to submit.
 
-> NOTE: You **must update** `src/main/resources/application.yml` with your real `name`, `regNo`, and `email`.
-> Also, edit the solver(s) to return your actual query for your assigned question.
+- Runs the whole flow **on startup** (no controllers).
+- Uses **WebClient** to call the BFH APIs.
+- Detects **Q1 (odd)** / **Q2 (even)** from the last-2 digits of `regNo`.
+- **Q1 (MySQL)** solution is already integrated.
+- Your details are set in `src/main/resources/application.yml`.
+- A **GitHub Actions** workflow compiles the JAR and commits it to `/release/`.
 
-## Build & Run
+## Your Details
+- Name: **Aayush Singh**
+- RegNo: **22BCE0769**
+- Email: **atollsemzer@gmail.com**
 
+## Build Locally (optional)
+Requires Java 17 + Maven:
 ```bash
-# Java 17 + Maven required
-mvn -v
-
-# Build JAR
 mvn -q -DskipTests package
-
-# Run
 java -jar target/bfh-java-qualifier-1.0.0.jar
 ```
 
-On success, you'll see logs and a file:
-- `target/finalQuery.sql` contains the exact query submitted.
+## CI Build (no local Java/Maven needed)
+GitHub Actions workflow at `.github/workflows/build-and-commit-jar.yml`:
+- Trigger it from the **Actions** tab → **Run workflow**
+- It builds and puts the jar at `release/bfh-java-qualifier.jar` (and commits it)
 
-## Where to put your SQL
-
-- Implement your real solution in:
-  - `com.example.bfhqualifier.solver.Q1Solver` (for odd regNo last two digits), or
-  - `com.example.bfhqualifier.solver.Q2Solver` (for even).
-
-Replace the placeholder `SELECT ...` with your final query.
-
-## Repo Checklist (per PDF)
-- Public GitHub repo with:
-  - Source code
-  - Built JAR
-  - Raw downloadable link to JAR
-- Public JAR link
-
-Good luck!
-
-
-## CI: Build JAR on GitHub
-A GitHub Actions workflow (`.github/workflows/build-and-commit-jar.yml`) is included.
-- Trigger it from the **Actions** tab (Run workflow).
-- It builds with Java 17 + Maven and commits the JAR to `release/bfh-java-qualifier-1.0.0.jar`.
-- Raw link format (after it runs):
-  `https://github.com/Semzer17/bfh-java-qualifier/raw/main/release/bfh-java-qualifier-1.0.0.jar`
+**Raw JAR link format (after CI run):**
+```
+https://github.com/<your-username>/bfh-java-qualifier/raw/main/release/bfh-java-qualifier.jar
+```
