@@ -44,7 +44,7 @@ jobs:
       - name: Copy JAR to release/
         run: |
           mkdir -p release
-          cp "${{ steps.detect.outputs.JAR }}" "release/bfh-java-qualifier.jar"
+          cp "${{ steps.detect.outputs.JAR }}" "release/bfh-java-qualifier-1.0.0.jar"
           ls -la release
 
       - name: Commit JAR to repo
